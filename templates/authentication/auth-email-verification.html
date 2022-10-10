@@ -1,0 +1,57 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+{% block title %}Email Verification{% endblock title %}
+{% block content %}
+    <body>
+        <div class="account-pages my-5 pt-sm-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center mb-5 text-muted">
+                            <a href="{% url 'dashboard' %}" class="d-block auth-logo">
+                                <img src="{% static 'images/logo-dark.png' %}" alt="" height="20" class="auth-logo-dark mx-auto">
+                                <img src="{% static 'images/logo-light.png' %}" alt="" height="20" class="auth-logo-light mx-auto">
+                            </a>
+                            <p class="mt-3">Responsive Bootstrap 5 Admin Dashboard</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6 col-xl-5">
+                        <div class="card">
+                            
+                            <div class="card-body"> 
+                                
+                                <div class="p-2">
+                                    <div class="text-center">
+
+                                        <div class="avatar-md mx-auto">
+                                            <div class="avatar-title rounded-circle bg-light">
+                                                <i class="bx bxs-envelope h1 mb-0 text-primary"></i>
+                                            </div>
+                                        </div>
+                                        <div class="p-2 mt-4">
+                                            <h4>Verify your email</h4>
+                                            <p>We have sent you verification email <span class="fw-semibold">example@abc.com</span>, Please check it</p>
+                                            <div class="mt-4">
+                                                <a href="{% url 'dashboard' %}" class="btn btn-success w-md">Verify email</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                            </div>
+                        </div>
+                        <div class="mt-5 text-center">
+                            <p>Didn't receive an email ? <a href="#" class="fw-medium text-primary"> Resend </a> </p>
+                            <p>© <script>document.write(new Date().getFullYear())</script> Tender Notifier. Crafted with <i class="mdi mdi-heart text-danger"></i> by Ease Technologies</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock content %}

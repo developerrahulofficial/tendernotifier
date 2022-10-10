@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Ease Technologies" name="author" />
+
+    <title>{{heading}} | Tender Notifier - Admin & Dashboard Template</title>
+    
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+    {% block css %}
+    {% block extra_css %}
+    {% endblock %}
+    <!-- Bootstrap Css -->
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+    {% endblock css %}
+</head>
+
+
+<body data-sidebar="dark">
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+        {% block header %}
+        {% include 'partials/header.html' %}
+        {% endblock %}
+        {% block sidebar %}
+        {% include 'partials/sidebar.html' %}
+        {% endblock %}
+        {% comment %} {% block header %}
+        {% include 'partials/hori-header.html' %}
+        {% endblock %}
+        {% block sidebar %}
+        {% include 'partials/hori-sidebar.html' %}
+        {% endblock %} {% endcomment %}
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    <!-- start page title -->
+                    <div class="row">   
+                        <div class="col-12">
+                            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                <h4 class="mb-sm-0 font-size-18">{{heading}}</h4>
+
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">{{pageview}}</a></li>
+                                        <li class="breadcrumb-item active">{{heading}}</li>
+                                    </ol>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                    {% block contents %}
+
+                    {% endblock %}
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+            {% block footer %}
+            {% include 'partials/footer.html' %}
+            {% endblock %}
+        </div>
+        <!-- end main content-->
+    </div>
+    <!-- END layout-wrapper -->
+    {% block Subscribe %}
+    {% endblock %} 
+
+    {% block r_sidebar %}
+    {% include 'partials/rightsidebar.html' %}
+    {% endblock %}
+
+            {% block javascript %}
+            <!-- JAVASCRIPT -->
+            <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+            <script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+            <script src="{% static 'libs/metismenu/dist/metisMenu.min.js' %}"></script>
+            <script src="{% static 'libs/simplebar/dist/simplebar.min.js' %}"></script>
+            <script src="{% static 'libs/node-waves/dist/waves.min.js' %}"></script>
+
+
+            {% block extra_javascript %}
+            {% endblock %}
+
+            <script src="{% static 'js/app.js' %}"></script>    
+            {% endblock javascript %}
+        </body>
+
+    </html>

@@ -1,0 +1,76 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load account %}
+{% load i18n %}
+{% block title %}Confirm Email{% endblock title %}
+{% block content %}
+    <body>
+        <div class="account-pages my-5 pt-sm-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center mb-5 text-muted">
+                            <a href="{% url 'dashboard' %}" class="d-block auth-logo">
+                                <img src="{% static 'images/logo-dark.png' %}" alt="" height="20" class="auth-logo-dark mx-auto">
+                                <img src="{% static 'images/logo-light.png' %}" alt="" height="20" class="auth-logo-light mx-auto">
+                            </a>
+                            <p class="mt-3">Responsive Bootstrap 5 Admin Dashboard</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6 col-xl-5">
+                        <div class="card">
+                            
+                            <div class="card-body"> 
+                                
+                                <div class="p-2">
+                                    <div class="text-center">
+
+                                        <div class="avatar-md mx-auto">
+                                            <div class="avatar-title rounded-circle bg-light">
+                                                <i class="bx bxs-envelope h1 mb-0 text-primary"></i>
+                                            </div>
+                                        </div>
+                                        <div class="p-2 mt-4">
+                                            <div class="mt-4">
+
+                                                <h4>{% trans "Confirm Email Address" %}</h4>
+
+                                                {% if confirmation %}
+
+                                                {% user_display confirmation.email_address.user as user_display %}
+
+                                                <p>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user <strong>{{ user_display }}</strong> .{% endblocktrans %}</p>
+
+                                                <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+                                                {% csrf_token %}
+                                                    <button type="submit" class="btn btn-success">{% trans 'Confirm' %}</button>
+                                                </form>
+
+                                                {% else %}
+
+                                                {% url 'account_email' as email_url %}
+
+                                                <p>{% blocktrans %}This e-mail confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktrans %}</p>
+
+                                                {% endif %} 
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                            </div>
+                        </div>
+                        <div class="mt-5 text-center">
+                            <p>Didn't receive an email ? <a href="#" class="fw-medium text-primary"> Resend </a> </p>
+                            <p>© <script>document.write(new Date().getFullYear())</script> Tender Notifier. Crafted with <i class="mdi mdi-heart text-danger"></i> by Ease Technologies</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock content %}

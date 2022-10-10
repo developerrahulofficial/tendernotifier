@@ -1,0 +1,186 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+        <!-- Sweet Alert-->
+        <link href="{% static 'libs/sweetalert2/dist/sweetalert2.min.css' %}" rel="stylesheet" type="text/css" />
+    
+{% endblock extra_css %}
+    
+{% block contents %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row mb-2">
+                                            <div class="col-sm-4">
+                                                <div class="search-box me-2 mb-2 d-inline-block">
+                                                    <div class="position-relative">
+                                                        <input type="text" class="form-control" placeholder="Search...">
+                                                        <i class="bx bx-search-alt search-icon"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div class="text-sm-end">
+                                                    <button type="button" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2" data-bs-toggle="modal" data-bs-target="#newcustomerModal"><i class="mdi mdi-plus me-1"></i> New Customer</button>
+                                                </div>
+                                            </div><!-- end col-->
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table align-middle table-nowrap" id="customerrecord">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Username</th>
+                                                        <th>Phone / Email</th>
+                                                        <th>Address</th>
+                                                        <th>Rating</th>
+                                                        <th>Wallet Balance</th>
+                                                        <th>Joining Date</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {% for customers in page_obj %}
+                                                        <tr id="row-{{customers.id}}">
+                                                            <td>
+                                                                <div class="form-check font-size-16">
+                                                                    <input class="form-check-input" type="checkbox" id="customerlistcheck01">
+                                                                    <label class="form-check-label" for="customerlistcheck01"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td id="username-{{customers.id}}">{{customers.username}}</td>
+                                                            <td>
+                                                                <p class="mb-1" id="phone-{{customers.id}}">{{customers.phone}}</p>
+                                                                <p class="mb-0" id="email-{{customers.id}}">{{customers.email}}</p>
+                                                            </td>
+                                                            
+                                                            <td id="address-{{customers.id}}">{{customers.address}}</td>
+                                                            <td id="rating-{{customers.id}}"><span class="badge bg-success font-size-12"><i class="mdi mdi-star me-1"></i> {{customers.rating}}</span></td>
+                                                            <td id="wallet_balance-{{customers.id}}" data-id="{{customers.wallet_balance}}">$ {{customers.wallet_balance|intcomma}}</td>
+                                                            <td >{{customers.joining_date|date:"d M, Y"}}</td>
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                                                                    </a>
+                                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                                        <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editcustomerModal" id="{{customers.id}}" onclick="editCustomer(this.id)"><i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Edit</a></li>
+                                                                        <li><a href="#" class="dropdown-item"  id="{{customers.id}}" onclick="sweetDelete(this.id,this)"><i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> Delete</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <ul class="pagination pagination-rounded justify-content-end mb-2">
+                                            <li class="page-item">
+                                                {% if page_obj.has_previous %}
+                                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                                    <i class="mdi mdi-chevron-left"></i>
+                                                </a>
+                                                {% endif %}
+                                            </li>
+                                            {% for i in page_obj.paginator.page_range %}
+                                            <li class="page-item {% if i == page_obj.number  %} active{% endif %}"><a class="page-link" href="?page={{ i }}">{{i}}</a></li>
+                                            {% endfor %}
+                                            <li class="page-item">
+                                                {% if page_obj.has_next %}
+                                                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                                    <i class="mdi mdi-chevron-right"></i>
+                                                </a>
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                        <!-- newcustomerModal -->
+                        <div class="modal fade" id="newcustomerModal" tabindex="-1" role="dialog" aria-labelledby="newcustomerModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                                <form class="modal-content" method="POST" name="form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="page_number" value="{{page_obj.number}}">
+                                    <div class="modal-body">
+                                        <div class="mb-3">                                                                
+                                            {{ form.username|as_crispy_field }}
+                                        </div>
+                                        <div class="mb-3">                                                                
+                                            {{ form.phone|as_crispy_field }}
+                                        </div>
+                                        <div class="mb-3">                                                                
+                                            {{ form.email|as_crispy_field }}
+                                        </div>
+                                        <div class="mb-3">                                                                
+                                            {{ form.address|as_crispy_field }}
+                                        </div>      
+                                        <div class="mb-3">                                                                
+                                            {{ form.rating|as_crispy_field }}
+                                        </div>
+                                        <div class="mb-3">                                                                
+                                            {{ form.wallet_balance|as_crispy_field }}
+                                        </div>                                
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary" name="addcustomer">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- end modal -->
+
+                        <!-- editcustomerModal -->
+                        <div class="modal fade" id="editcustomerModal" tabindex="-1" role="dialog" aria-labelledby="editcustomerModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                                <form class="modal-content" method="POST">
+                                    <input type="hidden" name="id" id="uid">
+                                    <input type="hidden" name="page_number" value="{{page_obj.number}}">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                      <div class="mb-3">                                                                
+                                        {{ form1.username|as_crispy_field }}
+                                      </div>
+                                      <div class="mb-3">                                                                
+                                          {{ form1.phone|as_crispy_field }}
+                                      </div>
+                                      <div class="mb-3">                                                                
+                                          {{ form1.email|as_crispy_field }}
+                                      </div>
+                                      <div class="mb-3">                                                                
+                                          {{ form1.address|as_crispy_field }}
+                                      </div>      
+                                      <div class="mb-3">                                                                
+                                          {{ form1.rating|as_crispy_field }}
+                                      </div>
+                                      <div class="mb-3">                                                                
+                                          {{ form1.wallet_balance|as_crispy_field }}
+                                      </div>                                 
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary" name="editcustomer">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- end modal -->
+{% endblock %}
+{% block extra_javascript %}
+    <!-- Sweet Alerts js -->
+    <script src="{% static 'libs/sweetalert2/dist/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'js/pages/customer.init.js' %}"></script>
+{% endblock %}
+

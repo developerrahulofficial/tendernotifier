@@ -1,0 +1,259 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <!-- select2 css -->
+    <link href="{% static 'libs/select2/dist/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- bootstrap-datepicker css -->
+    <link href="{% static 'libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contents %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title mb-3">Tenders</h4>
+
+                                        <!-- Nav tabs -->
+                                        <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-bs-toggle="tab" href="#all-order" role="tab">
+                                                    All Tenders
+                                                    <button class="button button5" style="background-color: #04AA6D;
+  border: none;
+  color: white;
+  padding: -7px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+border-radius: 50%;
+">{{ countAllbids }}</button>
+                                                </a>
+
+
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#processing" role="tab">
+                                                    Saved
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#participated" role="tab">
+                                                    Participated
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <!-- Tab panes -->
+                                        <div class="tab-content p-3">
+                                            <div class="tab-pane active" id="all-order" role="tabpanel">
+                                                <form action="datatables" method="post">
+                                                     {% csrf_token %}
+                                                    <div class="row">
+
+                                                        <div class="col-xl col-sm-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">From Date :</label>
+                                                                <input type="text" class="form-control" id="orderid-input" name="orderid-input" placeholder="Select date" data-date-format="dd M, yyyy" data-date-orientation="bottom auto" data-provide="datepicker" data-date-autoclose="true">
+                                                            </div>
+                                                        </div>
+
+                                                         <div class="col-xl col-sm-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">To Date :</label>
+                                                                <input type="text" class="form-control" id="orderid-ouput" name="orderid-ouput" placeholder="Select date" data-date-format="dd M, yyyy" data-date-orientation="bottom auto" data-provide="datepicker" data-date-autoclose="true">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl col-sm-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Services :</label>
+                                                                <select class="form-control select2-search-disable">
+                                                                    {% for entry in dropDownService %}
+                                                    <option value="{{ entry }}">{{ entry }}</option>
+                                                    {% endfor %}
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl col-sm-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">location :</label>
+                                                                <select class="form-control select2-search-disable">
+                                                                     {% for location in dropDownLocation %}
+                                                                    <option value="{{ location }}">{{ location }}</option>
+                                                                      {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl col-sm-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Status :</label>
+                                                                <select class="form-control select2-search-disable">
+                                                                    <option value="ongoing">On Going</option>
+                                                                    <option value="archived">Archived</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl col-sm-6 align-self-end">
+                                                            <div class="mb-3">
+                                                                <button type="submit" class="btn btn-primary w-md">Search</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+
+                                                <div class="table-responsive mt-2">
+                                                    <table class="table table-hover datatable dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Bid Number</th>
+                                                                <th>Action</th>
+                                                                <th>Department</th>
+                                                                <th>Service</th>
+                                                                <th>City</th>
+                                                                <th>Last Date</th>
+                                                                <th>End time</th>
+                                                                <th>View Doc</th>
+                                                            </tr>
+
+                                                        </thead>
+
+                                                         <tbody>
+                                             {% for bid in Bids %}
+                                            <tr>
+                                                <td>{{ bid.Bid_number }}</td>
+                                                <td><div class="btn-group btn-group-example mb-3" role="group">
+                                                                <button type="button" class="btn btn-primary w-xs"><i class="mdi mdi-thumb-up"></i></button>
+                                                                <button type="button" class="btn btn-danger w-xs"><i class="mdi mdi-thumb-down"></i></button>
+                                                            </div></td>
+                                                <td style="white-space: initial;">{{ bid.Department_Name }}</td>
+                                                <td style="white-space: initial;">{{ bid.Services }}</td>
+                                                <td>{{ bid.Address }}</td>
+                                                <td>{{ bid.End_date|date:'d-m-Y' }}</td>
+                                                <td>{{ bid.End_time }}</td>
+                                                <td><a href="{{ bid.PdfLink }}">view pdf</a></td>
+                                            </tr>
+                                             {% endfor %}
+                                            </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="processing" role="tabpanel">
+                                                <div>
+                                                    <div class="table-responsive mt-4">
+                                                        <table class="table table-hover datatable dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                            <thead>
+                                                                <tr>
+                                                                      <th>Bid Number</th>
+                                                <th>Action</th>
+                                                <th>Department</th>
+                                                <th>Service</th>
+                                                <th>City</th>
+                                                <th>Last Date</th>
+                                                <th>End time</th>
+                                                <th>View Doc</th>
+                                                                </tr>
+
+                                                            </thead>
+
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>03 Mar, 2020</td>
+                                                                    <td>Buy</td>
+                                                                    <td>Bitcoin</td>
+                                                                    <td>1.00952 BTC</td>
+                                                                    <td>$ 9067.62</td>
+                                                                    <td>$ 9067.62</td>
+                                                                    <td>$ 9067.62</td>
+                                                                    <td>
+                                                                        <span class="badge bg-success font-size-10">Completed</span>
+                                                                    </td>
+
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="participated" role="tabpanel">
+                                                <div>
+                                                    <div class="table-responsive mt-4">
+                                                        <table class="table table-hover datatable dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                            <thead>
+                                                                <tr>
+                                                                      <th>Bid Number</th>
+                                                <th>Action</th>
+                                                <th>Department</th>
+                                                <th>Service</th>
+                                                <th>City</th>
+                                                <th>Last Date</th>
+                                                <th>End time</th>
+                                                <th>View Doc</th>
+                                                                </tr>
+
+                                                            </thead>
+
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>test</td>
+                                                                    <td>test</td>
+                                                                    <td>Bitcoin</td>
+                                                                    <td>1.00952 BTC</td>
+                                                                    <td>$ 9067.62</td>
+                                                                    <td>$ 9067.62</td>
+                                                                    <td>$ 9067.62</td>
+                                                                    <td>
+                                                                        <span class="badge bg-success font-size-10">Completed</span>
+                                                                    </td>
+
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+{% endblock %}
+
+{% block extra_javascript %}
+
+    <!-- select2 -->
+    <script src="{% static 'libs/select2/dist/js/select2.min.js' %}"></script>
+    <!-- bootstrap-datepicker js -->
+    <script src="{% static 'libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+
+    <!-- Required datatable js -->
+    <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+
+    <!-- Responsive examples -->
+    <script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+
+    <!-- init js -->
+    <script src="{% static 'js/pages/crypto-orders.init.js' %}"></script>
+
+{% endblock %}

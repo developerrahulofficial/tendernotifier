@@ -1,0 +1,2 @@
+docker build --tag tender-notifier .
+docker run --publish 8000:8000 tender-notifier
